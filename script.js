@@ -95,12 +95,6 @@
 				$this.removeClass("orange").addClass("red");
 			}
 		});	
-		
-		$sums.bind("keypress", function(e){
-			if (e.keyCode > 57 || e.keyCode < 48) {
-				return false
-		 	}
-		});
 
 		$sums.bind("focus", function(){
 			if (!timerStarted) { startTime(); }
