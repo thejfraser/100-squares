@@ -166,4 +166,22 @@
 		reset();
 		showA(options, gameboard);
 	});
+
+	var w = $(window);
+	var n = $("body>nav");
+	var f = $("body>footer");
+	var m = $("body>main");
+	w.bind("resize", resize);
+	function _x(e) {
+		var a = parseInt(e.css("margin-top"));
+		var b = parseInt(e.css("margin-bottom"));
+		var c = parseInt(e.innerHeight())
+		return parseInt(e.innerHeight()) + parseInt(e.css("margin-top")) + parseInt(e.css("margin-bottom"));
+	}
+	function resize(){
+		var nh = parseInt($(window).innerHeight()) - (_x(n) + _x(f));
+		console.log(nh);
+		$("body>main").css("min-height", nh+"px");
+	}
+	resize();
 });

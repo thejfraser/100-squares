@@ -1,9 +1,13 @@
+main{
+	overflow:hidden;
+}
 nav p.flow-text{
 	margin:0;
 }
 div#gameboard{
 	text-align:center;
 	margin:20px;
+	min-width:640px;
 }
 div#gameboard div.grow,
 div#gameboard input,
