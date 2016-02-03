@@ -1,0 +1,42 @@
+nav p.flow-text{
+	margin:0;
+}
+div#gameboard{
+	text-align:center;
+	margin:20px;
+}
+div#gameboard div.grow,
+div#gameboard input,
+div#gameboard div.gcol {
+	margin:0;
+	vertical-align: top;
+}
+div#gameboard div.gcol {
+	line-height:40px;
+	border-collapse:collapse;
+}
+
+div#gameboard div.gcol {
+	width:40px !important;
+	height:40px !important;
+	position:relative;
+	border:1px #aaa solid;
+	text-align:center;
+	display:inline;
+	display:inline-block;
+	overflow:hidden;
+}
+div#gameboard input {
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	line-height:38px;
+	height:38px;
+	width:38px;
+	text-align:center;
+}
+div#gameboard input:focus {
+	border:0;
+}
