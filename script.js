@@ -2,14 +2,17 @@
  * could be written better
  **/
  jQuery(document).ready(function($){
-	var gameboard = $("div#gameboard");
-	var time = $("span#time");
-	var timerStarted = 0;
-	var ctime = 0;
-	var to = '';
-	var grid = 1;
-	var mode = 1;
-	var options = $("div#options");
+	var colh = 'orange lighten-4 kon',
+	ctime = 0,
+	gameboard = $("div#gameboard"),
+	grid = 1,
+	mode = 1,
+	options = $("div#options"),
+	time = $("span#time"),
+	tStarted = 0,
+	to = '',
+ 	colk = 'blue-grey lighten-4',
+ 	pro = 0;
 
 	function _s(e){e.preventDefault();e.stopPropagation()}
 		
@@ -17,35 +20,45 @@
 		_s(e);
 		grid = $("input#grid-size").val();
 		mode = $("input#difficulty").is(":checked") ? 1 : 0;
+		pro = $("input#superpro").is(":checked") ? 1 : 0;
+
+		gaEvent('option-change', 'promode', pro);
+		gaEvent('option-change', 'gridsize', grid);
+		gaEvent('option-change', 'mode', mode == 1 ? 'shuffle' : 'free');
+
 		loadGameBoard(grid);
 		showA(gameboard, options);
 	});
 
 	function showA(A,B) {
-		A.removeClass("hide");
-		B.addClass("hide");
+		h='hide';
+		A.removeClass(h);
+		B.addClass(h);
 	}
 	
-	function startTime () {
-		timerStarted = 1;
+	function sTime () {
+		tStarted=1;
 		ctime++;
 		time.text(ctime);
-		to = window.setTimeout(startTime, 1000);
+		to = window.setTimeout(sTime, 1000);
 	}
+
 	function finish() {
 		window.clearTimeout(to);
+		gaEvent('game', 'finished', mode + "#" + pro);
+		gaEvent('score-track', mode + "#" + pro, ctime);
 		$("span#modaltime").text(secondsToTime(ctime));
 		$("div#game-complete-modal").openModal({
 			dismissible: false
 		});
-		timerStarted = 0;
+		tStarted = 0;
 		ctime = 0;
 		time.text(ctime);
 	}
 	function reset()
 	{
 		window.clearTimeout(to);
-		timerStarted = 0;
+		tStarted = 0;
 		ctime = 0;
 		time.text(ctime);
 	}
@@ -60,20 +73,37 @@
 
 	loadGameBoard = function(squares)
 	{
+		y = "";
 		reset();
-		html = "<div class='grow row-0'><div class='gcol white'>&nbsp;</div>";
 
+		var xCols = Array();
 		for (i = 1; i <= squares; i++) {
-			html += "<div class='gcol blue-grey lighten-3'>" + i + "</div>";
+			xCols.push(i);
+		}
+		var yCols = xCols;
+
+		if (pro) {
+			xCols = shuffle(xCols);
+			yCols = shuffle(yCols);
+		}
+
+		html = '<div class="grow-row-0"><div class="gcol '+colk+' white slabel">' + squares + "x</div>";
+
+		for (d in xCols) {
+			i = xCols[d];
+			html += "<div class='gcol number-key "+colk+" y"+i+"'>" + i + "</div>";
 		}
 
 		html += "</div>";
 		
-		for (i = 1; i <= squares; i++) {
-			html += "<div class='grow row-" + i + "'><div class='gcol blue-grey lighten-3'><strong>" + i + "</strong></div>";
-			for (j = 1; j <= squares; j++) {
-				html += "<div class='gcol'>" + 
-				"<input type='text' class='answer unanswered' data-x='" + i + "' data-y='" + j + "' maxlength='3' />"
+
+		for (d in xCols) {
+			i = xCols[d];
+			html += '<div class="grow-row-' + i + '"><div class="gcol number-key '+y+colk+' x'+i+'"><strong>' + i + "</strong></div>";
+			for (z in yCols) {
+				j = yCols[z];
+				html += "<div class='gcol trail trailx-" + i + " traily-" + j + "'>" + 
+				"<input type='number' class='answer unanswered' data-x='" + i + "' data-y='" + j + "' maxlength='3' />"
 				+ "</div>";
 			}
 			html += "</div>";
@@ -97,10 +127,20 @@
 		});	
 
 		$sums.bind("focus", function(){
-			if (!timerStarted) { startTime(); }
-			$(this).addClass("orange lighten-4").val("")
+			var $this = $(this);
+			if (!tStarted) { sTime(); }
+			$this.addClass("orange lighten-4").val("");
+			$("div.number-key.x" + $this.attr("data-x")).addClass(colh).removeClass(colk);
+			$("div.trail.trailx-" + $this.attr("data-x")).addClass('trail-active');
+			$("div.trail.traily-" + $this.attr("data-y")).addClass('trail-active');
+			$("div.number-key.y"+ $this.attr("data-y")).addClass(colh).removeClass(colk);
+			$this.parent().removeClass("trail-active");
 		});
-
+		$sums.bind("blur", function(){
+			$("div.number-key.kon").removeClass(colh).addClass(colk);
+			$("div.trail").removeClass('trail-active');
+		});
+		gaEvent('game', 'start', mode + "#" + pro);
 		if (mode == 1) {
 			gameA($sums);
 		} else {
@@ -150,7 +190,6 @@
 				}
 			}
 		});
-		
 	}
 
 	function isCorrect(x)
@@ -162,6 +201,7 @@
 
 	$("a.playagain").click(function(e){
 		_s(e);
+		gaEvent('play-again', 'yes', 'yes');
 		$("div#game-complete-modal").closeModal();
 		reset();
 		showA(options, gameboard);
@@ -180,8 +220,19 @@
 	}
 	function resize(){
 		var nh = parseInt($(window).innerHeight()) - (_x(n) + _x(f));
-		console.log(nh);
 		$("body>main").css("min-height", nh+"px");
 	}
 	resize();
+
+	function gaEvent(act,lab,val) {
+		if (typeof(ga) != 'undefined') {
+			ga("send","event",'100squares',act,lab,val);
+		}
+	}
 });
+
+//This script comes from other sources :)
+function shuffle(o){
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+}

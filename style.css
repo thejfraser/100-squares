@@ -1,13 +1,15 @@
+html {
+	min-width:405px;
+}
 main{
 	overflow:hidden;
 }
-nav p.flow-text{
+nav .flow-text{
 	margin:0;
 }
-div#gameboard{
-	text-align:center;
+#gameboard{
 	margin:20px;
-	min-width:640px;
+	text-align:center;
 }
 div#gameboard div.grow,
 div#gameboard input,
@@ -16,31 +18,88 @@ div#gameboard div.gcol {
 	vertical-align: top;
 }
 div#gameboard div.gcol {
-	line-height:40px;
 	border-collapse:collapse;
-}
-
-div#gameboard div.gcol {
-	width:40px !important;
-	height:40px !important;
-	position:relative;
 	border:1px #aaa solid;
-	text-align:center;
 	display:inline;
 	display:inline-block;
+	height:40px;
+	line-height:40px;
 	overflow:hidden;
-}
-div#gameboard input {
-	position:absolute;
-	top:0px;
-	left:0px;
-	right:0px;
-	bottom:0px;
-	line-height:38px;
-	height:38px;
-	width:38px;
+	position:relative;
 	text-align:center;
+	width:40px;
+}
+
+div#gameboard input {
+	bottom:0px;
+	height:38px;
+	left:0px;
+	line-height:38px;
+	position:absolute;
+	right:0px;
+	text-align:center;
+	top:0px;
+	width:38px;
 }
 div#gameboard input:focus {
 	border:0;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+div.trail,
+input.answer,
+div.number-key {
+	-webkit-transition:all 0.5s;
+	-moz-transition:all 0.5s;
+	-ms-transition:all 0.5s;
+	-o-transition:all 0.5s;
+	transition:all 0.5s;
+}
+div.trail-active {
+	background-color:#ffc !important;
+	border-color:#ffc !important;
+}
+@media screen and (min-width:601px) and (max-width:800px) {
+	div#gameboard{
+		margin:15px;
+	}
+	div#gameboard input {
+		line-height:29px;
+		width:29px;
+		height:29px;
+		font-size:10px;
+	}
+	div#gameboard div.number-key,
+	.slabel {
+		font-size:10px;
+	}
+	div#gameboard div.gcol {
+		width:30px;
+		height:30px;
+		line-height:30px;
+	}
+}
+
+@media screen and (max-width:600px) {
+	div#gameboard{
+		margin:10px;
+	}
+	div#gameboard input {
+		line-height:23px;
+		width:23px;
+		height:23px;
+		font-size:8px;
+	}
+	div#gameboard div.number-key,
+	.slabel {
+		font-size:8px;
+	}
+	div#gameboard div.gcol {
+		width:24px;
+		height:24px;
+		line-height:24px;
+	}
 }
