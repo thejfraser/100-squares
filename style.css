@@ -62,6 +62,9 @@ div.trail-active {
 	background-color:#ffc !important;
 	border-color:#ffc !important;
 }
+div.trail-active input[disabled] {
+	background:none !important;
+}
 @media screen and (min-width:601px) and (max-width:800px) {
 	div#gameboard{
 		margin:15px;

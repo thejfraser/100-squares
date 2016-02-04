@@ -77,10 +77,11 @@
 		reset();
 
 		var xCols = Array();
+		var yCols = Array();
 		for (i = 1; i <= squares; i++) {
 			xCols.push(i);
+			yCols.push(i);
 		}
-		var yCols = xCols;
 
 		if (pro) {
 			xCols = shuffle(xCols);
@@ -89,8 +90,8 @@
 
 		html = '<div class="grow-row-0"><div class="gcol '+colk+' white slabel">' + squares + "x</div>";
 
-		for (d in xCols) {
-			i = xCols[d];
+		for (d in yCols) {
+			i = yCols[d];
 			html += "<div class='gcol number-key "+colk+" y"+i+"'>" + i + "</div>";
 		}
 
@@ -160,7 +161,7 @@
 			$u.attr("disabled", "disabled").addClass("grey lighten-2");
 			index = Math.floor(Math.random() * $u.length);
 			var el = $($u[index]);
-			el.removeAttr("disabled").removeClass("grey lighten-2").focus();
+			el.removeAttr("disabled").removeClass("grey lighten-2").focus().click();
 		}
 
 		$sums.bind("keyup", function(){
@@ -184,7 +185,7 @@
 				$this.removeClass("orange").addClass("green").attr("disabled", "disabled").removeClass("unanswered");
 				left--;
 				if (left > 0) {
-					$("input.unanswered").first().focus();
+					$("input.unanswered").first().focus().click();
 				} else {
 					finish();
 				}
